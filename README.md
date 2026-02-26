@@ -1,10 +1,10 @@
-# BlackTorch ?
+# 🔥 BlackTorch
 
 > Plateforme de génération de modèles 3D par IA, optimisée pour les GPU NVIDIA Blackwell.
 
 ---
 
-## ? Stack Technique
+## 🧱 Stack Technique
 
 | Couche        | Technologie                                                       |
 |---------------|-------------------------------------------------------------------|
@@ -18,65 +18,65 @@
 
 ---
 
-## ? Architecture
+## 🗂️ Architecture
 
 ```
 BlackTorch/
-??? client/                          # Frontend — Next.js 15 + Atomic Design
-?   ??? src/
-?       ??? app/                     # App Router (layout, page)
-?       ??? components/
-?       ?   ??? atoms/               # Button, Input, ModelBadge
-?       ?   ??? molecules/           # SearchBar, ModelCard
-?       ?   ??? organisms/           # ThreeCanvas, GenerationPanel
-?       ??? core/
-?       ?   ??? domain/              # Types TS : Prompt, Job, ThreeDModel
-?       ?   ??? use-cases/           # useGenerateModel, useJobStatus
-?       ??? lib/                     # api-client.ts
-?       ??? providers/               # HeroUI + TanStack Query
-?
-??? server/                          # Backend — FastAPI + Clean Archi + DDD
-    ??? domain/
-    ?   ??? entities/                # Prompt, Job, ThreeDModel
-    ?   ??? repositories/            # Interfaces abstraites (ports)
-    ??? application/
-    ?   ??? use_cases/               # GenerateModelFromText, GetModelStatus
-    ??? infrastructure/
-    ?   ??? adapters/                # StableFast3DAdapter, StorageAdapter
-    ?   ??? redis/                   # JobQueue, RedisJobRepository
-    ?   ??? worker/                  # Worker IA (boucle de consommation)
-    ??? interfaces/
-    ?   ??? routes/                  # generation.py, websocket.py, models.py
-    ?   ??? schemas.py               # DTOs Pydantic
-    ?   ??? dependencies.py          # FastAPI Depends (DI)
-    ?   ??? main.py                  # Application FastAPI
-    ??? tests/                       # Tests unitaires domaine
+├── client/                          # Frontend — Next.js 15 + Atomic Design
+│   └── src/
+│       ├── app/                     # App Router (layout, page)
+│       ├── components/
+│       │   ├── atoms/               # Button, Input, ModelBadge
+│       │   ├── molecules/           # SearchBar, ModelCard
+│       │   └── organisms/           # ThreeCanvas, GenerationPanel
+│       ├── core/
+│       │   ├── domain/              # Types TS : Prompt, Job, ThreeDModel
+│       │   └── use-cases/           # useGenerateModel, useJobStatus
+│       ├── lib/                     # api-client.ts
+│       └── providers/               # HeroUI + TanStack Query
+│
+└── server/                          # Backend — FastAPI + Clean Archi + DDD
+    ├── domain/
+    │   ├── entities/                # Prompt, Job, ThreeDModel
+    │   └── repositories/            # Interfaces abstraites (ports)
+    ├── application/
+    │   └── use_cases/               # GenerateModelFromText, GetModelStatus
+    ├── infrastructure/
+    │   ├── adapters/                # StableFast3DAdapter, StorageAdapter
+    │   ├── redis/                   # JobQueue, RedisJobRepository
+    │   └── worker/                  # Worker IA (boucle de consommation)
+    ├── interfaces/
+    │   ├── routes/                  # generation.py, websocket.py, models.py
+    │   ├── schemas.py               # DTOs Pydantic
+    │   ├── dependencies.py          # FastAPI Depends (DI)
+    │   └── main.py                  # Application FastAPI
+    └── tests/                       # Tests unitaires domaine
 ```
 
 ---
 
-## ? Workflow de Génération IA
+## ⚙️ Workflow de Génération IA
 
 ```
-[Utilisateur] ? Prompt texte
-      ?
-[Next.js] useGenerateModel() ? POST /api/v1/generate
-      ?
-[FastAPI] ? Crée un Job (PENDING) ? Redis Queue
-      ?
+[Utilisateur] → Prompt texte
+      ↓
+[Next.js] useGenerateModel() → POST /api/v1/generate
+      ↓
+[FastAPI] → Crée un Job (PENDING) → Redis Queue
+      ↓
 [Worker PyTorch — RTX]
-  ??? Charge StableFast3D (FP4 / Blackwell, < 12 Go VRAM)
-  ??? Publie la progression ? Redis Pub/Sub (20% ? 50% ? 80%)
-  ??? Export mesh ? .glb ? StorageAdapter
-      ?
-[WebSocket] ? Notifie le client en temps réel
-      ?
-[React Three Fiber] ? Affiche le modèle 3D (OrbitControls + autoRotate)
+  ├── Charge StableFast3D (FP4 / Blackwell, < 12 Go VRAM)
+  ├── Publie la progression → Redis Pub/Sub (20% → 50% → 80%)
+  └── Export mesh → .glb → StorageAdapter
+      ↓
+[WebSocket] → Notifie le client en temps réel
+      ↓
+[React Three Fiber] → Affiche le modèle 3D (OrbitControls + autoRotate)
 ```
 
 ---
 
-## ?? Installation
+## 🚀 Installation
 
 ### Prérequis
 
@@ -91,7 +91,7 @@ BlackTorch/
 cd client
 npm install
 cp .env.local.example .env.local   # ou éditer manuellement
-npm run dev                         # ? http://localhost:3000
+npm run dev                         # → http://localhost:3000
 ```
 
 ### 2. Backend
@@ -127,7 +127,7 @@ docker-compose up --build
 
 ---
 
-## ? Tests
+## 🧪 Tests
 
 ```bash
 cd server
@@ -136,7 +136,7 @@ pytest tests/ -v
 
 ---
 
-## ? API Reference
+## 📡 API Reference
 
 | Méthode     | Endpoint                          | Description                    |
 |-------------|-----------------------------------|--------------------------------|
@@ -148,7 +148,7 @@ pytest tests/ -v
 
 ---
 
-## ? Licence
+## 📄 Licence
 
 MIT
 

@@ -1,0 +1,59 @@
+# Image de base NVIDIA CUDA 12.8 + cuDNN (optimisée Blackwell / RTX 50xx)
+FROM nvidia/cuda:12.8.0-cudnn-runtime-ubuntu24.04
+
+# Évite les prompts interactifs apt
+ENV DEBIAN_FRONTEND=noninteractive
+
+WORKDIR /app
+
+# Dépendances système
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3.12 \
+    python3.12-dev \
+    python3-pip \
+    build-essential \
+    curl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Utiliser python3.12 comme python par défaut
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.12 1 \
+    && update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
+
+# PyTorch avec support CUDA 12.8 (--break-system-packages requis sur Ubuntu 24.04)
+RUN pip install --no-cache-dir --break-system-packages \
+    torch \
+    torchvision \
+    torchaudio \
+    --index-url https://download.pytorch.org/whl/cu128
+
+# StableFast3D (Stability AI) — clone + dépendances
+RUN git clone https://github.com/Stability-AI/stable-fast-3d.git /opt/sf3d \
+    && pip install --no-cache-dir --break-system-packages \
+        huggingface_hub \
+        diffusers \
+        transformers \
+        accelerate \
+        trimesh \
+        Pillow \
+        einops \
+        omegaconf \
+        jaxtyping \
+        pyhocon \
+    && cd /opt/sf3d \
+    && pip install --no-cache-dir --break-system-packages -e ./texture_baker/ \
+    && pip install --no-cache-dir --break-system-packages \
+        $(grep -v '^#' requirements.txt | grep -v 'texture_baker' | grep -v '^[[:space:]]*$' | grep -v '^[[:space:]]*[!<>=]' | xargs)
+
+# Ajouter SF3D au PYTHONPATH
+ENV PYTHONPATH=/app:/opt/sf3d
+
+# Dépendances Python de l'app
+COPY requirements.txt .
+RUN pip install --no-cache-dir --break-system-packages -r requirements.txt
+
+# Copier le code dans /app/server/
+COPY . ./server/
+
+
+CMD ["python", "-m", "server.infrastructure.worker.main"]

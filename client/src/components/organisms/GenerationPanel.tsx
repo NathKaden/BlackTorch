@@ -1,12 +1,22 @@
 "use client";
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { Progress, Card, CardBody } from "@heroui/react";
 import { SearchBar } from "@/components/molecules";
 import { ModelBadge } from "@/components/atoms";
-import { ThreeCanvas } from "./ThreeCanvas";
 import { useGenerateModel } from "@/core/use-cases/useGenerateModel";
 import { useJobStatus } from "@/core/use-cases/useJobStatus";
 import { createPrompt } from "@/core/domain";
+
+// Chargement dynamique sans SSR pour éviter le crash react-three-fiber
+const ThreeCanvas = dynamic(
+  () => import("./ThreeCanvas").then((m) => ({ default: m.ThreeCanvas })),
+  { ssr: false, loading: () => (
+    <div className="w-full h-full flex items-center justify-center bg-zinc-900 rounded-xl">
+      <p className="text-zinc-500 text-sm">Loading 3D viewer...</p>
+    </div>
+  )}
+);
 export function GenerationPanel() {
   const [activeJobId, setActiveJobId] = useState<string | null>(null);
   const [glbUrl, setGlbUrl] = useState<string | null>(null);
